@@ -35,7 +35,7 @@ node "your-managed-node.example.com" {
 ## Getting Started 
 Once this module is installed, you will need to update the following keys in `common.yml`
 ```shell
-/etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/modules/install/data$ cat common.yaml 
+/etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/modules/newrelic_installer/data$ cat common.yaml 
 ---
 newrelic_installer::install::new_relic_api_key: <YOUR-API-KEY>
 newrelic_installer::install::new_relic_account_id: <YOUR-ACCOUNT-ID>
