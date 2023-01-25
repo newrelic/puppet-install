@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rspec-puppet-utils'
-
 RSpec.configure do |c|
   c.mock_with :rspec
 end
