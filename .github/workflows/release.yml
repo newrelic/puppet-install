@@ -11,16 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
-        uses: newrelic/puppet-install/.github/actions/installation@master
+        uses: newrelic/puppet-install/.github/actions/installation@main
       - name: Run tests
-        uses: newrelic/puppet-install/.github/actions/tests@master
+        uses: newrelic/puppet-install/.github/actions/tests@main
   release_puppet:
     runs-on: ubuntu-latest
     name: Release puppet
     needs: run_prerelease_tests
     steps:
       - name: Release puppet
-        uses: newrelic/puppet-install/.github/actions/release@master
+        uses: newrelic/puppet-install/.github/actions/release@main
         env:
           FORGE_API_KEY: ${{ secrets.FORGE_API_KEY }}
 

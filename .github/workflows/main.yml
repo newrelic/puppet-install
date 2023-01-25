@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
-        uses: newrelic/puppet-install/.github/actions/installation@master
+        uses: newrelic/puppet-install/.github/actions/installation@main
       - name: Run tests
-        uses: newrelic/puppet-install/.github/actions/tests@master
+        uses: newrelic/puppet-install/.github/actions/tests@main
