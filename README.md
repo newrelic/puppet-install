@@ -37,9 +37,9 @@ Once this module is installed, you will need to update the following keys in `co
 ```shell
 /etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/modules/install/data$ cat common.yaml 
 ---
-newrelic::install::new_relic_api_key: <YOUR-API-KEY>
-newrelic::install::new_relic_account_id: <YOUR-ACCOUNT-ID>
-newrelic::install::new_relic_region: <YOUR-REGION>
+newrelic_installer::install::new_relic_api_key: <YOUR-API-KEY>
+newrelic_installer::install::new_relic_account_id: <YOUR-ACCOUNT-ID>
+newrelic_installer::install::new_relic_region: <YOUR-REGION>
 ```
 
 Then declare an instance of the `::install` class for your hosts.  For example:
@@ -52,11 +52,11 @@ Then declare an instance of the `::install` class for your hosts.  For example:
 
 ## Variables
 ### Hiera keys
-#### `newrelic::install::new_relic_api_key` 
+#### `newrelic_installer::install::new_relic_api_key` 
 Your New Relic API Key
-#### `newrelic::install::new_relic_account_id` 
+#### `newrelic_installer::install::new_relic_account_id` 
 Your New Relic Account ID
-#### `newrelic::install::new_relic_region` 
+#### `newrelic_installer::install::new_relic_region` 
 New Relic Region
 Supported values include:
 * `US`

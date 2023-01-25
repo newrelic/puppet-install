@@ -9,17 +9,17 @@ class newrelic_installer::install (
 ) {
 
   # Validate required environment variables
-  $nr_api_key = lookup("newrelic::install::new_relic_api_key", undef, undef, '')
+  $nr_api_key = lookup("newrelic_installer::install::new_relic_api_key", undef, undef, '')
   if $nr_api_key == undef or $nr_api_key.length() == 0 {
     fail('New Relic api key not provided')
   }
 
-  $nr_account_id = lookup("newrelic::install::new_relic_account_id", undef, undef, 0)
+  $nr_account_id = lookup("newrelic_installer::install::new_relic_account_id", undef, undef, 0)
   if $nr_account_id == undef or $nr_account_id == 0 {
     fail('New Relic account ID not provided')
   }
 
-  $nr_region = lookup("newrelic::install::new_relic_region", undef, undef, '')
+  $nr_region = lookup("newrelic_installer::install::new_relic_region", undef, undef, '')
   if $nr_region == undef or $nr_region.length() == 0 {
     fail('New Relic region not provided')
   }

@@ -1,4 +1,4 @@
 ---
-newrelic::install::new_relic_api_key: <YOUR-API-KEY>
-newrelic::install::new_relic_account_id: <YOUR-ACCOUNT-ID>
-newrelic::install::new_relic_region: <YOUR-REGION>
+newrelic_installer::install::new_relic_api_key: <YOUR-API-KEY>
+newrelic_installer::install::new_relic_account_id: <YOUR-ACCOUNT-ID>
+newrelic_installer::install::new_relic_region: <YOUR-REGION>
