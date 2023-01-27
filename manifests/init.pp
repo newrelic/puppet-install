@@ -5,5 +5,4 @@
 # @example
 #   include newrelic
 class newrelic_installer {
-
 }

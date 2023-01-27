@@ -109,6 +109,4 @@ class newrelic_installer::install (
       fail("New Relic Install is not yet supported on this platform: ${facts['kernel']}")
     }
   }
-
-
 }
