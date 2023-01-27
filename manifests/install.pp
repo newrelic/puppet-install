@@ -116,7 +116,7 @@ class newrelic_installer::install (
         logoutput   => true,
       }
       -> exec { 'install newrelic instrumentation' :
-        command     => strip("\"C:\Program Files\New Relic\New Relic CLI\\newrelic.exe\" install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
+        command     => strip("\"C:\\Program Files\\New Relic\\New Relic CLI\\newrelic.exe\" install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
