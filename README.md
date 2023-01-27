@@ -40,9 +40,9 @@ Supported values include:
 #### `environment_variables` _Hash_ 
 Hash of environment variables to set prior to execution.
 **The following keys and values are required:**
-* `'NEW_RELIC_API_KEY`: your New Relic API key
-* `'NEW_RELIC_ACCOUNT_ID`: your New Relic account id
-* `'NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`)
+* `NEW_RELIC_API_KEY`: your New Relic API key
+* `NEW_RELIC_ACCOUNT_ID`: your New Relic account id
+* `NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`)
 #### `verbosity` _String_ (optional)
 Specifies command output verbosity
 Supported values include
@@ -55,7 +55,7 @@ Hash of tags associated with entities instrumented with New Relic.  Examples:
 Sets the proxy server the agent should use. Examples:
 * `https://myproxy.foo.com:8080`
 * `http://10.10.254.254`
-#### `timeout` _Integer_ (optional)
+#### `install_timeout_seconds` _Integer_ (optional)
 Sets the timeout in seconds for New Relic installations.  Default is 600
 
 ## Support
