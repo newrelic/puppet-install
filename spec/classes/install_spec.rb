@@ -14,6 +14,8 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_ACCOUNT_ID' => 123,
             'NEW_RELIC_REGION' => 'some-region'
           },
+          'verbosity' => 'loud',
+          'proxy' => 'some-valid-url'
         }
       end
 
@@ -31,10 +33,12 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_ACCOUNT_ID' => 123,
             'NEW_RELIC_REGION' => 'some-region'
           },
+          'verbosity' => 'loud',
+          'proxy' => 'some-valid-url'
         }
       end
 
-      it { is_expected.to compile.and_raise_error(%r{/New Relic api key not provided/}) }
+      it { is_expected.to compile.and_raise_error(%r{New Relic api key not provided}) }
     end
   end
   on_supported_os.each do |os, os_facts|
@@ -47,10 +51,12 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_REGION' => 'some-region'
           },
+          'verbosity' => 'loud',
+          'proxy' => 'some-valid-url'
         }
       end
 
-      it { is_expected.to compile.and_raise_error(%r{/New Relic account ID not provided/}) }
+      it { is_expected.to compile.and_raise_error(%r{New Relic account ID not provided}) }
     end
   end
   on_supported_os.each do |os, os_facts|
@@ -63,10 +69,12 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
           },
+          'verbosity' => 'loud',
+          'proxy' => 'some-valid-url'
         }
       end
 
-      it { is_expected.to compile.and_raise_error(%r{/New Relic region not provided/}) }
+      it { is_expected.to compile.and_raise_error(%r{New Relic region not provided}) }
     end
   end
 end
