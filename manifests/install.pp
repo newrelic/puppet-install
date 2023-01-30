@@ -23,9 +23,9 @@
 class newrelic_installer::install (
   Array $targets                   = [],
   Hash $environment_variables      = {},
-  String $verbosity                = undef,
+  String $verbosity                = '', # lint:ignore:params_empty_string_assignment
   Hash $tags                       = {},
-  String $proxy                    = undef,
+  String $proxy                    = '', # lint:ignore:params_empty_string_assignment
   Integer $install_timeout_seconds = 600,
 ) {
   # Validate and transform friendly-recipe names to open-install-library formats

@@ -2,23 +2,23 @@
 
 require 'spec_helper'
 
+def required_vars
+  {
+    'targets' => ['some-valid-recipe-name'],
+    'environment_variables' => {
+      'NEW_RELIC_API_KEY' => 'some-api-key',
+      'NEW_RELIC_ACCOUNT_ID' => 123,
+      'NEW_RELIC_REGION' => 'some-region'
+    },
+  }
+end
+
 describe 'newrelic_installer::install' do
   on_supported_os.each do |os, os_facts|
-    # filters only Linux kernel, reads a bit odd
-    # next unless os_facts[:kernel] == 'Linux'
     context "installed and running newrelic-infra on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        {
-          'targets' => ['some-valid-recipe-name'],
-          'environment_variables' => {
-            'NEW_RELIC_API_KEY' => 'some-api-key',
-            'NEW_RELIC_ACCOUNT_ID' => 123,
-            'NEW_RELIC_REGION' => 'some-region'
-          },
-          'verbosity' => '',
-          'proxy' => ''
-        }
+        required_vars
       end
 
       # kernel-specific asserts
@@ -46,8 +46,6 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_ACCOUNT_ID' => 123,
             'NEW_RELIC_REGION' => 'some-region'
           },
-          'verbosity' => 'loud',
-          'proxy' => 'some-valid-url'
         }
       end
 
@@ -64,8 +62,6 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_REGION' => 'some-region'
           },
-          'verbosity' => '',
-          'proxy' => ''
         }
       end
 
@@ -82,8 +78,6 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
           },
-          'verbosity' => '',
-          'proxy' => ''
         }
       end
 
@@ -94,16 +88,7 @@ describe 'newrelic_installer::install' do
     context "installed with debug verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        {
-          'targets' => ['some-valid-recipe-name'],
-          'environment_variables' => {
-            'NEW_RELIC_API_KEY' => 'some-api-key',
-            'NEW_RELIC_ACCOUNT_ID' => 123,
-            'NEW_RELIC_REGION' => 'some-region'
-          },
-          'verbosity' => 'debug',
-          'proxy' => ''
-        }
+        required_vars.merge({ 'verbosity' => 'debug', 'proxy' => '' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--debug(.*)}) }
@@ -113,16 +98,7 @@ describe 'newrelic_installer::install' do
     context "installed with trace verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        {
-          'targets' => ['some-valid-recipe-name'],
-          'environment_variables' => {
-            'NEW_RELIC_API_KEY' => 'some-api-key',
-            'NEW_RELIC_ACCOUNT_ID' => 123,
-            'NEW_RELIC_REGION' => 'some-region'
-          },
-          'verbosity' => 'trace',
-          'proxy' => ''
-        }
+        required_vars.merge({ 'verbosity' => 'trace', 'proxy' => '' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--trace(.*)}) }
@@ -132,20 +108,7 @@ describe 'newrelic_installer::install' do
     context "installed with optional tags on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        {
-          'targets' => ['some-valid-recipe-name'],
-          'environment_variables' => {
-            'NEW_RELIC_API_KEY' => 'some-api-key',
-            'NEW_RELIC_ACCOUNT_ID' => 123,
-            'NEW_RELIC_REGION' => 'some-region'
-          },
-          'tags' => {
-            'some-tag' => 'some-value',
-            'another-tag' => 'another-value'
-          },
-          'verbosity' => '',
-          'proxy' => ''
-        }
+        required_vars.merge('tags' => { 'some-tag' => 'some-value', 'another-tag' => 'another-value' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install some-tag:some-value another-tag:another-value(.*)}) }
