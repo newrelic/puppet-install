@@ -4,6 +4,8 @@ require 'spec_helper'
 
 describe 'newrelic_installer::install' do
   on_supported_os.each do |os, os_facts|
+    # filters only Linux kernel, reads a bit odd
+    # next unless os_facts[:kernel] == 'Linux'
     context "installed and running newrelic-infra on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
@@ -14,12 +16,25 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_ACCOUNT_ID' => 123,
             'NEW_RELIC_REGION' => 'some-region'
           },
-          'verbosity' => 'loud',
-          'proxy' => 'some-valid-url'
+          'verbosity' => '',
+          'proxy' => ''
         }
       end
 
-      it { is_expected.to compile }
+      # kernel-specific asserts
+      if os_facts[:kernel] == 'Linux' then
+        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '777') }
+        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').that_comes_before('Exec[install newrelic-cli]') }
+
+      else
+        if os_facts[:kernel] == 'windows' then
+          it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '777') }
+          it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').that_comes_before('Exec[install newrelic-cli]') }
+        end
+      end
+      #common asserts
+      it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
+      it { is_expected.to have_exec_resource_count(2) }
       it { is_expected.to contain_service('newrelic-infra').only_with('ensure' => 'running', 'enable' => true) }
     end
   end
@@ -51,8 +66,8 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_REGION' => 'some-region'
           },
-          'verbosity' => 'loud',
-          'proxy' => 'some-valid-url'
+          'verbosity' => '',
+          'proxy' => ''
         }
       end
 
@@ -69,8 +84,8 @@ describe 'newrelic_installer::install' do
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
           },
-          'verbosity' => 'loud',
-          'proxy' => 'some-valid-url'
+          'verbosity' => '',
+          'proxy' => ''
         }
       end
 
