@@ -91,9 +91,7 @@ describe 'newrelic_installer::install' do
     end
   end
   on_supported_os.each do |os, os_facts|
-    # filters only Linux kernel, reads a bit odd
-    # next unless os_facts[:kernel] == 'Linux'
-    context "installed with optional tags on #{os}" do
+    context "installed with debug verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
         {
@@ -108,14 +106,49 @@ describe 'newrelic_installer::install' do
         }
       end
 
-      # kernel-specific asserts
-      # if os_facts[:kernel] == 'Linux'
-      #   it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '777').that_comes_before('Exec[install newrelic-cli]') }
-        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--debug(.*)}) }
-      # elsif os_facts[:kernel] == 'windows'
-      #   it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '777').that_comes_before('Exec[install newrelic-cli]') }
-      #   it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--debug(.*)}) }
-      # end
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--debug(.*)}) }
+    end
+  end
+  on_supported_os.each do |os, os_facts|
+    context "installed with trace verbosity on #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        {
+          'targets' => ['some-valid-recipe-name'],
+          'environment_variables' => {
+            'NEW_RELIC_API_KEY' => 'some-api-key',
+            'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'some-region'
+          },
+          'verbosity' => 'trace',
+          'proxy' => ''
+        }
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--trace(.*)}) }
+    end
+  end
+  on_supported_os.each do |os, os_facts|
+    context "installed with optional tags on #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        {
+          'targets' => ['some-valid-recipe-name'],
+          'environment_variables' => {
+            'NEW_RELIC_API_KEY' => 'some-api-key',
+            'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'some-region'
+          },
+          'tags' => {
+            'some-tag' => 'some-value',
+            'another-tag' => 'another-value'
+          },
+          'verbosity' => '',
+          'proxy' => ''
+        }
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install some-tag:some-value another-tag:another-value(.*)}) }
     end
   end
 end
