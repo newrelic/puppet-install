@@ -1,20 +1,24 @@
 # == Class: newrelic_installer::install
 # === Required Parameters
 # [*targets*]
-#   lorem ipsum
+#   Targets that you are attempting to instrument with New Relic
 #
 # [*environment_variables*]
-#   lorem ipsum
+#   Hash of environment variables that are used when running New Relic.
+#   Required keys
+#   - NEW_RELIC_API_KEY
+#   - NEW_RELIC_ACCOUNT_ID
+#   - NEW_RELIC_REGION
 #
 # === Optional Parameters
 # [*verbosity*]
-#   lorem ipsum
+#   Verbosity of New Relic install command (debug, trace)
 # [*tags*]
-#   lorem ipsum
+#   Hash of tags to pass to New Relic install command
 # [*proxy*]
-#   lorem ipsum
+#   Valid URL, including protocol and port, for proxy
 # [*install_timeout_seconds*]
-#   lorem ipsum
+#   Timeout for exec commands, defaults to 600 seconds
 #
 # === Authors
 #
