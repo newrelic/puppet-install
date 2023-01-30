@@ -8,7 +8,6 @@ def required_vars
     'environment_variables' => {
       'NEW_RELIC_API_KEY' => 'some-api-key',
       'NEW_RELIC_ACCOUNT_ID' => 123,
-      'NEW_RELIC_REGION' => 'some-region'
     },
   }
 end
@@ -32,6 +31,7 @@ describe 'newrelic_installer::install' do
 
       # common asserts
       it { is_expected.to have_exec_resource_count(2) }
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)}) }
       it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
       it { is_expected.to contain_service('newrelic-infra').only_with('ensure' => 'running', 'enable' => true) }
     end
@@ -69,7 +69,7 @@ describe 'newrelic_installer::install' do
     end
   end
   on_supported_os.each do |os, os_facts|
-    context "failing with missing region on #{os}" do
+    context "default to US when invalid region on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
         {
@@ -77,11 +77,46 @@ describe 'newrelic_installer::install' do
           'environment_variables' => {
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'kaboom'
           },
         }
       end
 
-      it { is_expected.to compile.and_raise_error(%r{New Relic region not provided}) }
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)}) }
+    end
+  end
+  on_supported_os.each do |os, os_facts|
+    context "installs using EU as region #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        {
+          'targets' => ['some-valid-recipe-name'],
+          'environment_variables' => {
+            'NEW_RELIC_API_KEY' => 'some-api-key',
+            'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'eu'
+          },
+        }
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=EU(.*)}) }
+    end
+  end
+  on_supported_os.each do |os, os_facts|
+    context "installs explicity passes US as region #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        {
+          'targets' => ['some-valid-recipe-name'],
+          'environment_variables' => {
+            'NEW_RELIC_API_KEY' => 'some-api-key',
+            'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'us'
+          },
+        }
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)}) }
     end
   end
   on_supported_os.each do |os, os_facts|
