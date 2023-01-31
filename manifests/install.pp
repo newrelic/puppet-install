@@ -79,8 +79,8 @@ class newrelic_installer::install (
 
   # tranform tags to cli argument
   if !$tags.empty {
-    $space_delimited_tags = $tags.map |$index, $value| { "${index}:${value}" }.join(' ')
-    $cli_tag_arg = "--tag nr_deployed_by:puppet-install ${space_delimited_tags} "
+    $space_delimited_tags = $tags.map |$index, $value| { "${index}:${value}" }.join(',')
+    $cli_tag_arg = "--tag nr_deployed_by:puppet-install,${space_delimited_tags} "
   } else {
     $cli_tag_arg = '--tag nr_deployed_by:puppet-install'
   }

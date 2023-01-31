@@ -146,7 +146,7 @@ describe 'newrelic_installer::install' do
         required_vars.merge('tags' => { 'some-tag' => 'some-value', 'another-tag' => 'another-value' })
       end
 
-      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install some-tag:some-value another-tag:another-value(.*)}) }
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install,some-tag:some-value,another-tag:another-value(.*)}) }
     end
   end
 end
