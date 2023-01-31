@@ -22,7 +22,7 @@ Notice: Installing -- do not interrupt ...
 ## Getting Started 
 To use this module, you'll need to instantiate the `::install` class, specifying an instrumentation target and some New Relic account-specific details.  For example:
 ```ruby
-# /etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/manifests/sites.pp
+# /etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/manifests/site.pp
 class { 'newrelic_installer::install':
           targets               => ["infrastructure"],
           environment_variables => {
@@ -42,7 +42,7 @@ Hash of environment variables to set prior to execution.
 **The following keys and values are required:**
 * `NEW_RELIC_API_KEY`: your New Relic API key
 * `NEW_RELIC_ACCOUNT_ID`: your New Relic account id
-* `NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`)
+* `NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`).  Defaults to `US` if not specified
 #### `verbosity` _String_ (optional)
 Specifies command output verbosity
 Supported values include

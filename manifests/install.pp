@@ -8,7 +8,7 @@
 #   Required keys
 #   - NEW_RELIC_API_KEY
 #   - NEW_RELIC_ACCOUNT_ID
-#   - NEW_RELIC_REGION
+#   - NEW_RELIC_REGION - defaults to 'US' if not specified
 #
 # === Optional Parameters
 # [*verbosity*]
@@ -50,10 +50,15 @@ class newrelic_installer::install (
   if $nr_account_id == undef or $nr_account_id == 0 {
     fail('New Relic account ID not provided')
   }
-  $nr_region = $environment_variables['NEW_RELIC_REGION']
-  if $nr_region == undef or $nr_region.length() == 0 {
-    fail('New Relic region not provided')
+  # Default region to US
+  if $environment_variables['NEW_RELIC_REGION'] == undef
+  or $environment_variables['NEW_RELIC_REGION'].length() == 0
+  or !(upcase($environment_variables['NEW_RELIC_REGION']) in ['US', 'EU', 'STAGING']) {
+    $nr_region = { 'NEW_RELIC_REGION' => 'US' }
+  } else {
+    $nr_region = { 'NEW_RELIC_REGION' => "${upcase($environment_variables['NEW_RELIC_REGION'])}" }
   }
+
   # transform proxy to envar
   if $proxy == undef or $proxy.length() == 0 {
     $proxy_envar = {}
@@ -63,7 +68,7 @@ class newrelic_installer::install (
     }
   }
   # transform environment_variables to cli argument (really an array of key=value)
-  $cli_envars = ($environment_variables + $proxy_envar).map |$key, $value| { "${key}=${value}" }
+  $cli_envars = ($environment_variables + $proxy_envar + $nr_region).map |$key, $value| { "${key}=${value}" }
 
   # transform verbosity to cli argument
   if $verbosity != undef and downcase($verbosity) in ['debug', 'trace'] {
@@ -82,50 +87,51 @@ class newrelic_installer::install (
 
   case $facts['kernel'] {
     'Linux': {
-      remote_file { '/tmp/newrelic_cli_install.sh' :
+      remote_file { '/tmp/newrelic_cli_install.sh':
         ensure => present,
         source => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh',
         mode   => '777',
         proxy  => $proxy,
       }
-      -> exec { 'install newrelic-cli' :
+      -> exec { 'install newrelic-cli':
         command     => strip('/tmp/newrelic_cli_install.sh'),
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
-      -> exec { 'install newrelic instrumentation' :
-        command     => strip("/usr/local/bin/newrelic install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
+      -> exec { 'install newrelic instrumentation':
+        command     => strip("/usr/local/bin/newrelic install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}")
+        ,
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
-      -> service { 'newrelic-infra' :
+      -> service { 'newrelic-infra':
         ensure => 'running',
         enable => 'true',
       }
     }
     'windows': {
-      remote_file { 'C:\Windows\TEMP\install.ps1' :
+      remote_file { 'C:\Windows\TEMP\install.ps1':
         ensure => present,
         source => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1',
         mode   => '777',
         proxy  => $proxy,
       }
-      -> exec { 'install newrelic-cli' :
+      -> exec { 'install newrelic-cli':
         command     => strip('powershell -ExecutionPolicy Bypass -File C:\Windows\TEMP\install.ps1'),
         provider    => powershell,
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
-      -> exec { 'install newrelic instrumentation' :
+      -> exec { 'install newrelic instrumentation':
         command     => strip("\"C:\\Program Files\\New Relic\\New Relic CLI\\newrelic.exe\" install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
-      -> service { 'newrelic-infra' :
+      -> service { 'newrelic-infra':
         ensure => 'running',
         enable => 'true',
       }
