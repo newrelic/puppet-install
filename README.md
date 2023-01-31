@@ -3,12 +3,18 @@
 This Puppet module installs and configures New Relic instrumentation on user-specified targets
 ## Installation
 ### Puppet Forge
-**Coming soon**: `puppet module install newrelic-newrelic_installer`
+```shell
+puppet module install newrelic-newrelic_installer
+```
+
+View more installation options on [PuppetForge](https://forge.puppet.com/modules/newrelic/newrelic_installer/readme) 
+
 
 ### Manual
 * Install puppet development kit: https://www.puppet.com/docs/pdk/2.x/pdk_install.html 
-* Clone repo and execute `pdk build`.  This will build the module to `pkg/newrelic-newrelic_installer-0.1.0.tar.gz`
-* Copy `pkg/newrelic-newrelic_installer-0.1.0.tar.gz` to your master node and install manually
+* Clone repo and build a tarball of the module using `pdk build`
+  * e.g. `pkg/newrelic-newrelic_installer-0.1.0.tar.gz` 
+* Copy module tarball to your master node and install manually
 ```shell
 sudo puppet module install ~/newrelic-newrelic_installer-0.1.0.tar.gz
 Notice: Preparing to install into /etc/puppetlabs/code/environments/production/modules ...
