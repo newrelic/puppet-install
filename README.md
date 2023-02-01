@@ -56,7 +56,7 @@ Supported values include
 * `trace`
 #### `tags` _Hash_ (optional)
 Hash of tags associated with entities instrumented with New Relic.  Examples:
-* `{'environment' => 'production', 'version' => '1.2.3'}`
+* `{'key-name' => 'value', 'foo' => 'bar'}`
 #### `proxy` _String_ (optional)
 Sets the proxy server the agent should use. Examples:
 * `https://myproxy.foo.com:8080`
