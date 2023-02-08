@@ -1,8 +1,17 @@
-[![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
-# New Relic installation using Puppet
-This Puppet module installs and configures New Relic instrumentation on user-specified targets
+[![Community header](https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Community_Project.png)](https://opensource.newrelic.com/oss-category/#community-project)
+
+# New Relic Puppet module
+
+`newrelic-newrelic_installer` is a [Puppet module](https://forge.puppet.com/modules/newrelic/newrelic_installer/readme) that will help you scale your New Relic Observability efforts. It uses the [New Relic CLI](https://github.com/newrelic/newrelic-cli) and [New Relic Open Installation repository](https://github.com/newrelic/open-install-library) to achieve this.
+
+Currently, we have included Linux and Windows support for New Relic's Infrastructure and Logs integrations, with more agents and integrations following in the near future.
+
+**Note: Installing specific versions of an agent is not supported, this role will always install latest released version of a New Relic agent.**
+
 ## Installation
+
 ### Puppet Forge
+
 ```shell
 puppet module install newrelic-newrelic_installer
 ```
@@ -11,6 +20,7 @@ View more installation options on [PuppetForge](https://forge.puppet.com/modules
 
 
 ### Manual
+
 * Install puppet development kit: https://www.puppet.com/docs/pdk/2.x/pdk_install.html 
 * Clone repo and build a tarball of the module using `pdk build`
   * e.g. `pkg/newrelic-newrelic_installer-0.1.0.tar.gz` 
