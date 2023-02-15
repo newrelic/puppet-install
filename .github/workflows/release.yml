@@ -1,11 +1,12 @@
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 name: Release
 
 jobs:
-  run_prerelease_tests:
+  run_prerelease_tasks:
     runs-on: ubuntu-latest
     name: Run tests
     steps:
@@ -14,10 +15,26 @@ jobs:
         uses: newrelic/puppet-install/.github/actions/installation@main
       - name: Run tests
         uses: newrelic/puppet-install/.github/actions/tests@main
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.7'
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        run: rake module:bump_to_version[${GITHUB_REF_NAME#v}]
+      - name: Create release version
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ GITHUB_REF_NAME }}
+          release_name: Release ${{ GITHUB_REF_NAME }}
+          draft: false
+          prerelease: false
+
   release_puppet:
     runs-on: ubuntu-latest
-    name: Release puppet
-    needs: run_prerelease_tests
+    name: publish module to forge.puppet.com
+    needs: run_prerelease_tasks
     steps:
       - name: Release puppet
         uses: newrelic/puppet-install/.github/actions/release@main
