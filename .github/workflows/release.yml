@@ -1,11 +1,12 @@
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 name: Release
 
 jobs:
-  run_prerelease_tests:
+  run_prerelease_tasks:
     runs-on: ubuntu-latest
     name: Run tests
     steps:
@@ -14,10 +15,21 @@ jobs:
         uses: newrelic/puppet-install/.github/actions/installation@main
       - name: Run tests
         uses: newrelic/puppet-install/.github/actions/tests@main
+      - name: Create release version
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
   release_puppet:
     runs-on: ubuntu-latest
-    name: Release puppet
-    needs: run_prerelease_tests
+    name: publish module to forge.puppet.com
+    needs: run_prerelease_tasks
     steps:
       - name: Release puppet
         uses: newrelic/puppet-install/.github/actions/release@main
