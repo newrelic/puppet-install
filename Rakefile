@@ -87,3 +87,35 @@ EOM
   end
 end
 
+namespace :newrelic do
+  task "release" do
+    branch = `git branch --show-current`.strip
+
+    if !branch.eql? "main"
+      raise <<EOM
+                                          
+                                    ,d                            
+                                    88                            
+                        ,adPPYba, MM88MMM ,adPPYba,  8b,dPPYba,   
+                        I8[    ""   88   a8"     "8a 88P'    "8a  
+                        `"Y8ba,    88   8b       d8 88       d8  
+                        aa    ]8I   88,  "8a,   ,a8" 88b,   ,a8"  
+                        `"YbbdP"'   "Y888 `"YbbdP"'  88`YbbdP"'   
+                                                     88           
+                                                     88    
+
+You are attempting to release a version from  "#{branch}" - you must be on "main" to initiate the release process!
+
+EOM
+
+    else
+      puts "Current working branch \"#{branch}\""
+    end
+
+    Rake::Task['module:bump'].execute()
+    newVersion = JSON.load(File.read('metadata.json'))['version']
+    sh "git commit -am 'Version bump to #{newVersion}' && git push origin main"
+    Rake::Task['module:tag'].execute()
+    sh "git push --tags"
+  end
+end
