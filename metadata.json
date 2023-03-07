@@ -1,6 +1,6 @@
 {
   "name": "newrelic-newrelic_installer",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "New Relic, Inc.",
   "summary": "Puppet module for installing New Relic integrations",
   "license": "Apache-2.0",
