@@ -2,6 +2,16 @@
 
 require 'spec_helper'
 
+RSpec.shared_context 'targets_to_recipe_stub' do
+  let(:pre_condition) do
+    '
+    function newrelic_installer::targets_to_recipes(Tuple $arg) >> String {
+      return "valid_oil_recipe"
+    }
+    '
+  end
+end
+
 def required_vars
   {
     'targets' => ['some-valid-recipe-name'],
@@ -14,6 +24,7 @@ end
 
 describe 'newrelic_installer::install' do
   on_supported_os.each do |os, os_facts|
+    include_context 'targets_to_recipe_stub'
     context "installed and running newrelic-infra on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
