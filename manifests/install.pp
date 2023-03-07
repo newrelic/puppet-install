@@ -33,13 +33,11 @@ class newrelic_installer::install (
   Integer $install_timeout_seconds = 600,
 ) {
   # Validate and transform friendly-recipe names to open-install-library formats
-  # TODO create a custom function to handle nice->oil lookups, return in comma-separate list for cli
-  if $targets.length() == 0 {
+  $recipes = newrelic_installer::targets_to_recipes($targets)
+  if $recipes.length() == 0 {
     fail('New Relic instrumentation target not provided')
-  } else {
-    $oil_recipe_names = ['infrastructure-agent-installer']
   }
-  $cli_recipe_arg = "-n ${oil_recipe_names.join(',')}"
+  $cli_recipe_arg = "-n ${recipes}"
 
   # Validate required environment variables
   $nr_api_key = $environment_variables['NEW_RELIC_API_KEY']
