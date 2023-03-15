@@ -1,0 +1,19 @@
+---
+- name: Install git
+  ansible.builtin.dnf:
+    name:
+      - git
+    state: present
+  become: yes
+
+- name: Clone config repository
+  ansible.builtin.git:
+    repo: https://github.com/newrelic/puppet-install.git
+    dest: /home/config
+  become: true
+
+- name: Build newrelic-newrelic_installer using PDK
+  shell: |
+    cd /home/puppet-install
+    pdk build --force
+  become: true

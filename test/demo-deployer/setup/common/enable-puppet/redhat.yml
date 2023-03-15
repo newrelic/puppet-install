@@ -1,0 +1,35 @@
+---
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+- name: Download puppet platform
+  ansible.builtin.dnf:
+    name: http://yum.puppetlabs.com/puppet-release-fedora-32.noarch.rpm
+    state: present
+  become: yes
+
+- name: Install puppet agent
+  ansible.builtin.dnf:
+    name:
+      - puppet
+    state: present
+  become: yes
+
+- name: Symlink puppet
+  shell: ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet
+  ignore_errors: true
+  become: yes
+
+- name: Download puppet tools (pdk)
+  ansible.builtin.dnf:
+    name: https://yum.puppet.com/puppet-tools-release-fedora-32.noarch.rpm
+    state: present
+  become: yes
+
+- name: Install pdk
+  ansible.builtin.dnf:
+    name:
+      - pdk
+    state: present
+  become: yes

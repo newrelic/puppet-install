@@ -1,0 +1,13 @@
+---
+- name: Download and enable Puppet platform
+  include_tasks: ../../../../common/enable-puppet/{{ ansible_os_family | lower }}.yml
+
+- name: Building
+  include_tasks: ../../../../common/clone-repo-and-build-module/{{ ansible_os_family | lower }}.yml
+
+- name: Installing newrelic_installer module
+  include_tasks: install-module/{{ ansible_os_family | lower }}.yml
+  vars:
+    nr_api_key: "{{ newrelic_personal_api_key }}"
+    nr_account_id: "{{ newrelic_account_id }}"
+    nr_region: "{{ newrelic_region|upper }}"

@@ -1,0 +1,35 @@
+---
+- name: Update zypper
+  shell: zypper update
+  become: yes
+
+- name: Download puppet platform
+  ansible.builtin.zypper:
+    name: https://yum.puppet.com/puppet-tools-release-sles-{{ansible_distribution_major_version }}.noarch.rpm
+    state: present
+  become: yes
+
+- name: Install puppet agent
+  ansible.builtin.zypper:
+    name:
+      - puppet
+    state: present
+  become: yes
+
+- name: Symlink puppet
+  shell: ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet
+  ignore_errors: true
+  become: yes
+
+- name: Download puppet tools (pdk)
+  ansible.builtin.zypper:
+    name: https://yum.puppet.com/puppet-tools-release-sles-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+  become: yes
+
+- name: Install pdk
+  ansible.builtin.zypper:
+    name:
+      - pdk
+    state: present
+  become: yes
