@@ -1,0 +1,40 @@
+---
+- name: Install prereqs for ansible.builtin.apt module
+  ansible.builtin.apt:
+    name:
+      - xz-utils
+  become: yes
+
+- name: Add puppet-release package repository
+  ansible.builtin.apt:
+    deb: https://apt.puppet.com/puppet-release-{{ ansible_distribution_release | lower }}.deb
+  become: yes
+
+- name: Update apt
+  shell: apt update -y
+  become: yes
+
+- name: Install puppet-agent
+  ansible.builtin.apt:
+    name:
+      - net-tools
+      - puppet-agent
+    state: present
+  become: yes
+
+- name: Symlink puppet
+  shell: ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet
+  ignore_errors: true
+  become: yes
+
+- name: Add puppet-tools package repository (PDK)
+  ansible.builtin.apt:
+    deb: https://apt.puppet.com/puppet-tools-release-{{ ansible_distribution_release | lower }}.deb
+  become: yes
+
+- name: Install pdk
+  ansible.builtin.apt:
+    name:
+      - pdk
+    state: present
+  become: yes
