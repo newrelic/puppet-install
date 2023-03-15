@@ -1,0 +1,43 @@
+{
+  "global_tags": {
+    "owning_team": "virtuoso",
+    "Environment": "development",
+    "Department": "product",
+    "Product": "virtuoso"
+  },
+  "resources": [
+    {
+      "id": "host1",
+      "provider": "aws",
+      "type": "ec2",
+      "size": "t3.micro",
+      "ami_name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-????????",
+      "user_name": "ubuntu"
+    }
+  ],
+  "instrumentations": {
+    "resources": [
+      {
+        "id": "ubuntu18_puppet-install_infra",
+        "resource_ids": [
+          "host1"
+        ],
+        "provider": "newrelic",
+        "source_repository": "https://github.com/newrelic/puppet-install",
+        "deploy_script_path": "test/demo-deployer/setup/infrastructure/roles"
+      },
+      {
+        "id": "recipeValidation",
+        "resource_ids": [
+          "host1"
+        ],
+        "provider": "newrelic",
+        "source_repository": "https://github.com/newrelic/puppet-install",
+        "deploy_script_path": "test/demo-deployer/validate/roles",
+        "params": {
+          "nrql_query": "select count(*) from ProcessSample where hostname like '%HOSTNAME%' since 8 minutes ago limit max"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,134 @@
+#
+# 1. Update package manager
+# 2. Download and install puppet
+#  -  amzn2, centos7
+#  -  amzn2022
+#  -  centos8
+# 3. Symlink puppet
+# 4. Download and install PDK
+#  -  amzn2, centos7
+#  -  amzn2022
+#  -  centos8
+#
+#
+---
+#  1. Update package manager
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+
+# 2. Download and install puppet
+#  - amzn2, centos7
+- name: Download puppet platform (RHEL7)
+  ansible.builtin.yum:
+    name: http://yum.puppetlabs.com/puppet-release-el-7.noarch.rpm
+    state: present
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2') or
+         (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+- name: Install puppet agent (RHEL7)
+  ansible.builtin.yum:
+    name:
+      - puppet
+    state: present
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2') or
+         (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+# 2. Download and install puppet
+# - amzn2022
+- name: Download puppet platform (Fedora 32)
+  ansible.builtin.dnf:
+    name: http://yum.puppetlabs.com/puppet-release-fedora-32.noarch.rpm
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2022')"
+- name: Install puppet agent (Fedora 32)
+  ansible.builtin.dnf:
+    name:
+      - puppet
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2022')"
+# 2. Download and install puppet
+# - centos8
+- name: Download puppet platform (RHEL8)
+  ansible.builtin.dnf:
+    name: http://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8')"
+- name: Install puppet agent (RHEL8)
+  ansible.builtin.dnf:
+    name:
+      - puppet
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8')"
+
+
+# 3. Symlink puppet
+- name: Symlink puppet
+  shell: ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet
+  ignore_errors: true
+  become: yes
+
+
+# 4. Download and install PDK
+#  -  amzn2, centos7
+- name: Download puppet tools (pdk) (RHEL7)
+  ansible.builtin.yum:
+    name: https://yum.puppet.com/puppet-tools-release-el-7.noarch.rpm
+    state: present
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2') or
+         (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+- name: Install pdk
+  ansible.builtin.yum:
+    name:
+      - pdk
+    state: present
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2') or
+         (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7')"
+# 4. Download and install PDK
+#  -  amzn2022
+- name: Download puppet tools (pdk) (Fedora 32)
+  ansible.builtin.dnf:
+    name: https://yum.puppet.com/puppet-tools-release-fedora-32.noarch.rpm
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2022')"
+- name: Install pdk
+  ansible.builtin.dnf:
+    name:
+      - pdk
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'Amazon' and ansible_distribution_major_version == '2022')"
+# 4. Download and install PDK
+#  -  centos8
+- name: Download puppet tools (pdk) (RHEL8)
+  ansible.builtin.dnf:
+    name: https://yum.puppet.com/puppet-tools-release-el-8.noarch.rpm
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8')"
+- name: Install pdk
+  ansible.builtin.dnf:
+    name:
+      - pdk
+    state: present
+    update_cache: true
+  become: yes
+  when: "(ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8')"
+
+
+
