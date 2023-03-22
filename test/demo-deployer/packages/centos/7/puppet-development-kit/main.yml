@@ -1,0 +1,16 @@
+---
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+- name: Download puppet tools (pdk) (RHEL7)
+  ansible.builtin.yum:
+    name: https://yum.puppet.com/puppet-tools-release-el-7.noarch.rpm
+    state: present
+  become: yes
+- name: Install pdk
+  ansible.builtin.yum:
+    name:
+      - pdk
+    state: present
+  become: yes

@@ -1,0 +1,7 @@
+---
+- name: Install git
+  ansible.builtin.apt:
+    name:
+      - git
+    state: present
+  become: yes

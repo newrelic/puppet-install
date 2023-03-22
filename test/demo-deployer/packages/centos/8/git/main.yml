@@ -1,0 +1,7 @@
+---
+- name: Install git (RHEL8)
+  ansible.builtin.dnf:
+    name:
+      - git
+    state: present
+  become: yes

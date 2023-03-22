@@ -1,0 +1,11 @@
+---
+- name: Update apt
+  shell: apt update -y
+  become: yes
+
+- name: Install git
+  ansible.builtin.apt:
+    name:
+      - git
+    state: present
+  become: yes

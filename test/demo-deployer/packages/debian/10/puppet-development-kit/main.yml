@@ -1,0 +1,16 @@
+---
+- name: Add puppet-tools package repository (PDK)
+  ansible.builtin.apt:
+    deb: https://apt.puppet.com/puppet-tools-release-{{ ansible_distribution_release | lower }}.deb
+  become: yes
+
+- name: Update apt
+  shell: apt update -y
+  become: yes
+
+- name: Install pdk
+  ansible.builtin.apt:
+    name:
+      - pdk
+    state: present
+  become: yes
