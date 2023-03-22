@@ -1,0 +1,7 @@
+---
+- name: Install git (RHEL7)
+  ansible.builtin.yum:
+    name:
+      - git
+    state: present
+  become: yes

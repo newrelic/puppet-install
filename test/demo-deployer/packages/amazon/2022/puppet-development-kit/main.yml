@@ -1,0 +1,21 @@
+---
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+- name: Download puppet tools (pdk) (Fedora 32)
+  ansible.builtin.dnf:
+    name: https://yum.puppet.com/puppet-tools-release-fedora-32.noarch.rpm
+    state: present
+    update_cache: true
+    disable_gpg_check: true
+  become: yes
+
+- name: Install pdk
+  ansible.builtin.dnf:
+    name:
+      - pdk
+    state: present
+    update_cache: true
+    disable_gpg_check: true
+  become: yes

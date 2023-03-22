@@ -1,0 +1,28 @@
+---
+# Update package manager
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+# Download and install puppet
+- name: Download puppet platform
+  ansible.builtin.yum:
+    name: http://yum.puppetlabs.com/puppet-release-el-7.noarch.rpm
+    state: present
+  become: yes
+
+- name: Install puppet agent (RHEL7)
+  ansible.builtin.yum:
+    name:
+      - puppet
+    state: present
+  become: yes
+
+# Symlink puppet
+- name: Symlink puppet
+  ansible.builtin.file:
+    src: /opt/puppetlabs/bin/puppet
+    dest: /usr/bin/puppet
+    owner: root
+    group: root
+    state: link

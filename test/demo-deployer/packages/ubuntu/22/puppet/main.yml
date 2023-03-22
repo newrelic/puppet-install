@@ -1,0 +1,31 @@
+---
+- name: Install prereqs for ansible.builtin.apt module
+  ansible.builtin.apt:
+    name:
+      - xz-utils
+  become: yes
+
+- name: Add puppet-release package repository
+  ansible.builtin.apt:
+    deb: https://apt.puppet.com/puppet-release-{{ ansible_distribution_release | lower }}.deb
+  become: yes
+
+- name: Update apt
+  shell: apt update -y
+  become: yes
+
+- name: Install puppet-agent
+  ansible.builtin.apt:
+    name:
+      - net-tools
+      - puppet-agent
+    state: present
+  become: yes
+
+- name: Symlink puppet
+  ansible.builtin.file:
+    src: /opt/puppetlabs/bin/puppet
+    dest: /usr/bin/puppet
+    owner: root
+    group: root
+    state: link
