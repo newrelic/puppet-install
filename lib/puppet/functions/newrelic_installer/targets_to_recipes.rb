@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'set'
 
 # https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#the-4x-api
 Puppet::Functions.create_function(:"newrelic_installer::targets_to_recipes") do
@@ -7,8 +8,26 @@ Puppet::Functions.create_function(:"newrelic_installer::targets_to_recipes") do
     return_type 'String' # list of comma-separated recipes
   end
   def targets_to_recipes(targets)
+    if targets.length == 0 then
+      raise Puppet::ParseError, "You must specify at least one instrumentation target."
+    end
+
+    valid_recipe_mappings = {
+      'infrastructure' => 'infrastructure-agent-installer',
+      'logs' => 'logs-integration'
+    }
+    requires_infrastructure_set = Set['logs']
+
+    targets_set = Set.new(targets)
+    targets_dependent_on_infrastructure_set =  targets_set & requires_infrastructure_set
+
+    if
+      targets_dependent_on_infrastructure_set.length > 0 && !targets_set.include?('infrastructure') then
+      message = "Infrastructure is required for the following: #{targets_dependent_on_infrastructure_set.to_a}. Add 'infrastructure' to your targets."
+      raise Puppet::ParseError, message
+    end
+
     recipes = []
-    valid_recipe_mappings = { 'infrastructure' => 'infrastructure-agent-installer' }
 
     targets.each do |target|
       if valid_recipe_mappings.key?(target)

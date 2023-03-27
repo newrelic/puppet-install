@@ -9,4 +9,6 @@ describe 'newrelic_installer::targets_to_recipes' do
   it { is_expected.to run.with_params(['infrastructure', 'nope']).and_return('infrastructure-agent-installer') }
   # all invalid
   it { is_expected.to run.with_params(['nope']).and_return('') }
+  # infrastructure is missing
+  it { is_expected.to run.with_params(['logs']).and_raise_error(Puppet::ParseError) }
 end
