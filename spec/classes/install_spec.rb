@@ -42,7 +42,7 @@ describe 'newrelic_installer::install' do
 
       # common asserts
       it { is_expected.to have_exec_resource_count(2) }
-      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)}) }
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
       it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
       it { is_expected.to contain_service('newrelic-infra').only_with('ensure' => 'running', 'enable' => true) }
     end
