@@ -1,0 +1,31 @@
+---
+# Update package manager
+- name: Update yum
+  shell: yum -y update
+  become: yes
+
+# Download/install PHP from amazon's package manager
+- name: Install PHP
+  shell: "amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2"
+  become: yes
+
+- name: Install other prereqs
+  ansible.builtin.yum:
+    pkg:
+      - httpd
+      - mariadb
+      - mariadb-server
+    state: present
+  become: yes
+
+- template:
+    src: "{{ item }}"
+    dest: ~/templates/
+    mode: 0755
+  with_fileglob:
+    - ../../../common/php/templates/*
+  become: yes
+
+- shell:
+    cmd: ~/templates/install-wordpress.sh
+  become: yes
