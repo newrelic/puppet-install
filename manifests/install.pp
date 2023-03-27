@@ -65,8 +65,12 @@ class newrelic_installer::install (
       'HTTPS_PROXY' => $proxy,
     }
   }
+
+  # prevent bundling of infra and logs
+  $skip_core = { 'NEW_RELIC_CLI_SKIP_CORE' => 1 }
+
   # transform environment_variables to cli argument (really an array of key=value)
-  $cli_envars = ($environment_variables + $proxy_envar + $nr_region).map |$key, $value| { "${key}=${value}" }
+  $cli_envars = ($environment_variables + $proxy_envar + $nr_region + $skip_core).map |$key, $value| { "${key}=${value}" }
 
   # transform verbosity to cli argument
   if $verbosity != undef and downcase($verbosity) in ['debug', 'trace'] {
