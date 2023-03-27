@@ -35,7 +35,7 @@ class newrelic_installer::install (
   # Validate and transform friendly-recipe names to open-install-library formats
   $recipes = newrelic_installer::targets_to_recipes($targets)
   if $recipes.length() == 0 {
-    fail('New Relic instrumentation target not provided')
+    fail('Valid New Relic instrumentation target not provided')
   }
   $cli_recipe_arg = "-n ${recipes}"
 
