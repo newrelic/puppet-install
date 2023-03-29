@@ -23,7 +23,7 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install",
+        "local_source_path": "/mnt/deployer/puppet-install",
         "deploy_script_path": "/test/demo-deployer/setup/php/roles"
       },
       {
@@ -32,8 +32,8 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install",
-        "deploy_script_path": "test/demo-deployer/validate/roles",
+        "local_source_path": "/mnt/deployer/puppet-install",
+        "deploy_script_path": "/test/demo-deployer/validate/roles",
         "params": {
           "nrql_query": "select count(*) from ApplicationAgentContext where agent.language = 'php' and host like '%HOSTNAME%' since 8 minutes ago"
         }

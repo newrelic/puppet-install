@@ -23,8 +23,8 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install",
-        "deploy_script_path": "test/demo-deployer/setup/infrastructure/roles"
+        "local_source_path": "/mnt/deployer/puppet-install",
+        "deploy_script_path": "/test/demo-deployer/setup/infrastructure/roles"
       },
       {
         "id": "recipeValidation",
@@ -32,8 +32,8 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install",
-        "deploy_script_path": "test/demo-deployer/validate/roles",
+        "local_source_path": "/mnt/deployer/puppet-install",
+        "deploy_script_path": "/test/demo-deployer/validate/roles",
         "params": {
           "nrql_query": "select count(*) from ProcessSample where hostname like '%HOSTNAME%' since 8 minutes ago"
         }

@@ -2,19 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.shared_context 'targets_to_recipe_stub' do
-  let(:pre_condition) do
-    '
-    function newrelic_installer::targets_to_recipes(Tuple $arg) >> String {
-      return "valid_oil_recipe"
-    }
-    '
-  end
-end
-
 def required_vars
   {
-    'targets' => ['some-valid-recipe-name'],
     'environment_variables' => {
       'NEW_RELIC_API_KEY' => 'some-api-key',
       'NEW_RELIC_ACCOUNT_ID' => 123,
@@ -24,19 +13,18 @@ end
 
 describe 'newrelic_installer::install' do
   on_supported_os.each do |os, os_facts|
-    include_context 'targets_to_recipe_stub'
-    context "installed and running newrelic-infra on #{os}" do
+    context "installed target=infrastructure and running newrelic-infra on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        required_vars
+        required_vars.merge({ 'targets' => ['infrastructure'] })
       end
 
       # kernel-specific asserts
       if os_facts[:kernel] == 'Linux'
-        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '777').that_comes_before('Exec[install newrelic-cli]') }
+        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
         it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic install(.*)--tag nr_deployed_by:puppet-install}) }
       elsif os_facts[:kernel] == 'windows'
-        it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '777').that_comes_before('Exec[install newrelic-cli]') }
+        it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
         it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic.exe" install(.*)--tag nr_deployed_by:puppet-install}) }
       end
 
@@ -44,7 +32,27 @@ describe 'newrelic_installer::install' do
       it { is_expected.to have_exec_resource_count(2) }
       it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
       it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
-      it { is_expected.to contain_service('newrelic-infra').only_with('ensure' => 'running', 'enable' => true) }
+    end
+
+    context "installed target=php and on #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        required_vars.merge({ 'targets' => ['php'] })
+      end
+
+      # kernel-specific asserts
+      if os_facts[:kernel] == 'Linux'
+        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
+        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic install(.*)--tag nr_deployed_by:puppet-install}) }
+      elsif os_facts[:kernel] == 'windows'
+        it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
+        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic.exe" install(.*)--tag nr_deployed_by:puppet-install}) }
+      end
+
+      # common asserts
+      it { is_expected.to have_exec_resource_count(2) }
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
+      it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
     end
   end
   on_supported_os.each do |os, os_facts|
@@ -52,7 +60,7 @@ describe 'newrelic_installer::install' do
       let(:facts) { os_facts }
       let(:params) do
         {
-          'targets' => ['some-valid-recipe-name'],
+          'targets' => ['infrastructure'],
           'environment_variables' => {
             'NEW_RELIC_ACCOUNT_ID' => 123,
             'NEW_RELIC_REGION' => 'some-region'
@@ -68,7 +76,7 @@ describe 'newrelic_installer::install' do
       let(:facts) { os_facts }
       let(:params) do
         {
-          'targets' => ['some-valid-recipe-name'],
+          'targets' => ['infrastructure'],
           'environment_variables' => {
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_REGION' => 'some-region'
@@ -84,7 +92,7 @@ describe 'newrelic_installer::install' do
       let(:facts) { os_facts }
       let(:params) do
         {
-          'targets' => ['some-valid-recipe-name'],
+          'targets' => ['infrastructure'],
           'environment_variables' => {
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
@@ -101,7 +109,7 @@ describe 'newrelic_installer::install' do
       let(:facts) { os_facts }
       let(:params) do
         {
-          'targets' => ['some-valid-recipe-name'],
+          'targets' => ['infrastructure'],
           'environment_variables' => {
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
@@ -114,11 +122,11 @@ describe 'newrelic_installer::install' do
     end
   end
   on_supported_os.each do |os, os_facts|
-    context "installs explicity passes US as region #{os}" do
+    context "installs explicity pass US as region #{os}" do
       let(:facts) { os_facts }
       let(:params) do
         {
-          'targets' => ['some-valid-recipe-name'],
+          'targets' => ['infrastructure'],
           'environment_variables' => {
             'NEW_RELIC_API_KEY' => 'some-api-key',
             'NEW_RELIC_ACCOUNT_ID' => 123,
@@ -134,7 +142,7 @@ describe 'newrelic_installer::install' do
     context "installed with debug verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        required_vars.merge({ 'verbosity' => 'debug', 'proxy' => '' })
+        required_vars.merge({ 'targets' => ['infrastructure'], 'verbosity' => 'debug', 'proxy' => '' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--debug(.*)}) }
@@ -144,7 +152,7 @@ describe 'newrelic_installer::install' do
     context "installed with trace verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        required_vars.merge({ 'verbosity' => 'trace', 'proxy' => '' })
+        required_vars.merge({ 'targets' => ['infrastructure'], 'verbosity' => 'trace', 'proxy' => '' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--trace(.*)}) }
@@ -154,7 +162,7 @@ describe 'newrelic_installer::install' do
     context "installed with optional tags on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        required_vars.merge('tags' => { 'some-tag' => 'some-value', 'another-tag' => 'another-value' })
+        required_vars.merge('targets' => ['infrastructure'], 'tags' => { 'some-tag' => 'some-value', 'another-tag' => 'another-value' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install,some-tag:some-value,another-tag:another-value(.*)}) }

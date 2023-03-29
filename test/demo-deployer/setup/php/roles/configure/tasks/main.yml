@@ -17,7 +17,7 @@
     repo: https://github.com/newrelic/puppet-install.git
     dest: /home/puppet-install
 #    TODO: test against your branch that is pushed to remote when running locally...
-#    version: chore/php-dd-test
+    version: feat/php-apm
   become: true
 - name: Build newrelic-newrelic_installer using PDK
   shell: |
