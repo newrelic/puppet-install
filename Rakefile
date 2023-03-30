@@ -87,12 +87,36 @@ EOM
   end
 end
 
+
 namespace :newrelic do
   task "release" do
-    branch = `git branch --show-current`.strip
+    release_verify_branch
+    Rake::Task['module:bump'].execute()
+    release_tag_and_push
+  end
+  task "release:patch" do
+    release_verify_branch
+    Rake::Task['module:bump:patch'].execute()
+    release_tag_and_push
+  end
+  task "release:minor" do
+    release_verify_branch
+    Rake::Task['module:bump:minor'].execute()
+    release_tag_and_push
+  end
+  task "release:major" do
+    release_verify_branch
+    Rake::Task['module:bump:major'].execute()
+    release_tag_and_push
+  end
+end
 
-    if !branch.eql? "main"
-      raise <<EOM
+
+def release_verify_branch
+  branch = `git branch --show-current`.strip
+
+  if !branch.eql? "main"
+    raise <<EOM
                                           
                                     ,d                            
                                     88                            
@@ -108,14 +132,14 @@ You are attempting to release a version from  "#{branch}" - you must be on "main
 
 EOM
 
-    else
-      puts "Current working branch \"#{branch}\""
-    end
-
-    Rake::Task['module:bump'].execute()
-    newVersion = JSON.load(File.read('metadata.json'))['version']
-    sh "git commit -am 'Version bump to #{newVersion}' && git push origin main"
-    Rake::Task['module:tag'].execute()
-    sh "git push --tags"
+  else
+    puts "Current working branch \"#{branch}\""
   end
+end
+
+def release_tag_and_push
+  newVersion = JSON.load(File.read('metadata.json'))['version']
+  sh "git commit -am 'Version bump to #{newVersion}' && git push origin main"
+  Rake::Task['module:tag'].execute()
+  sh "git push --tags"
 end
