@@ -40,11 +40,12 @@ To use this module, you'll need to instantiate the `::install` class, specifying
 ```ruby
 # /etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/manifests/site.pp
 class { 'newrelic_installer::install':
-          targets               => ["infrastructure"],
+          targets               => ["infrastructure", "logs", "php"],
           environment_variables => {
-            "NEW_RELIC_API_KEY"    => "<YOUR-NR-API-KEY>",
-            "NEW_RELIC_ACCOUNT_ID" => <YOUR-NR-ACCOUNT-ID>,
-            "NEW_RELIC_REGION"     => '<US|EU>'
+            "NEW_RELIC_API_KEY"          => "<YOUR-NR-API-KEY>",
+            "NEW_RELIC_ACCOUNT_ID"       => <YOUR-NR-ACCOUNT-ID>,
+            "NEW_RELIC_REGION"           => "<US|EU>",
+            "NEW_RELIC_APPLICATION_NAME" => "<YOUR-PHP-APPLICATION-NAME>"
           }
 }
 ```
@@ -53,12 +54,14 @@ class { 'newrelic_installer::install':
 Specifies target to be instrumented with New Relic 
 Supported values include:
 * `'infrastructure'` - New Relic Infrastructure Agent
+* `'logs'` - Logs integration for New Relic Infrastructure Agent. **requires `'infrastructure'`*
+* `'php'` - New Relic PHP APM Agent
 #### `environment_variables` _Hash_ 
 Hash of environment variables to set prior to execution.
-**The following keys and values are required:**
-* `NEW_RELIC_API_KEY`: your New Relic API key
-* `NEW_RELIC_ACCOUNT_ID`: your New Relic account id
+* `NEW_RELIC_API_KEY`: your New Relic API key **required*
+* `NEW_RELIC_ACCOUNT_ID`: your New Relic account id **required*
 * `NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`).  Defaults to `US` if not specified
+* `NEW_RELIC_APPLICATION_NAME`: used by `'php'`. This config option sets the application name that data is reported under in APM. Defaults to `'PHP Application'` if not specified.
 #### `verbosity` _String_ (optional)
 Specifies command output verbosity
 Supported values include
