@@ -24,7 +24,6 @@ group :development do
   gem "puppet-module-posix-dev-r#{minor_version}", '~> 1.0', require: false, platforms: [:ruby]
   gem "puppet-module-win-default-r#{minor_version}", '~> 1.0', require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "puppet-module-win-dev-r#{minor_version}", '~> 1.0', require: false, platforms: [:mswin, :mingw, :x64_mingw]
-  gem "voxpupuli-puppet-lint-plugins", '>= 3.0', require: false
   gem 'concurrent-ruby', '< 1.2.0', require: false
   gem 'rspec-puppet-utils', require: false
 end
