@@ -57,6 +57,7 @@ Supported values include:
 * `'logs'` - Logs integration for New Relic Infrastructure Agent. **requires `'infrastructure'`*
 * `'php'` - New Relic PHP APM Agent
 * `'dotnet'` - New Relic .Net APM Agent
+* `'nodejs'` - New Relic Node APM Agent
 #### `environment_variables` _Hash_ 
 Hash of environment variables to set prior to execution.
 * `NEW_RELIC_API_KEY`: your New Relic API key **required*

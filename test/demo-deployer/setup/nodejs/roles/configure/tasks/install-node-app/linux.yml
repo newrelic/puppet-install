@@ -1,0 +1,30 @@
+---
+- name: Create app directory
+  ansible.builtin.file:
+    path: /opt/dummy_node_app
+    state: directory
+    mode: '0777'
+  become: yes
+
+- name: Copy application file
+  ansible.builtin.copy:
+    src: files/app.js
+    dest: /opt/dummy_node_app/app.js
+  become: yes
+
+- name: Copy package.json file
+  ansible.builtin.copy:
+    src: files/package.json
+    dest: /opt/dummy_node_app/package.json
+  become: yes
+
+- name: Install dependencies
+  ansible.builtin.command:
+    chdir: /opt/dummy_node_app/
+    cmd: npm install
+
+- name: Enable and start the dummy Node.js app
+  ansible.builtin.command:
+    cmd: pm2 start /opt/dummy_node_app/app.js
+  become: yes
+

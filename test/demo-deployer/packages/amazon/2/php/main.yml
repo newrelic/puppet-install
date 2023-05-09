@@ -20,12 +20,12 @@
 
 - template:
     src: "{{ item }}"
-    dest: ~/templates/
+    dest: ~/files/
     mode: 0755
   with_fileglob:
-    - ../../../common/php/templates/*
+    - ../../../common/php/files/*
   become: yes
 
 - shell:
-    cmd: ~/templates/install-wordpress.sh
+    cmd: ~/files/install-wordpress.sh
   become: yes

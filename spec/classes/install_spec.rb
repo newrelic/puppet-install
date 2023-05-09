@@ -12,7 +12,7 @@ def required_vars
 end
 
 describe 'newrelic_installer::install' do
-  targets = ['infrastructure', 'php', 'dotnet']
+  targets = ['infrastructure', 'php', 'dotnet', 'nodejs']
   on_supported_os.each do |os, os_facts|
     targets.each do |target|
       context "installed target=#{target} and running newrelic-infra on #{os}" do
