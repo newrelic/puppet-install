@@ -1,0 +1,36 @@
+---
+# Install dependencies (git, puppet, php)
+- name: Install git
+  include_tasks: ../../../../packages/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/git/main.yml
+- name: Install puppet
+  include_tasks: ../../../../packages/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/puppet/main.yml
+- name: Install puppet-development-kit
+  include_tasks: ../../../../packages/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/puppet-development-kit/main.yml
+- name: Install node and PM2
+  include_tasks: ../../../../packages/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/nodejs/main.yml
+
+# Start node app, PM2-managed
+- name: Start node application using PM2
+  include_tasks: install-node-app/linux.yml
+
+# Clone module repo and build locally
+- name: Clone puppet-install repository
+  ansible.builtin.git:
+    repo: https://github.com/newrelic/puppet-install.git
+    dest: /home/puppet-install
+#    TODO: test against your branch that is pushed to remote when running locally...
+    version: feature/nr-110121
+  become: true
+- name: Build newrelic-newrelic_installer using PDK
+  shell: |
+    cd /home/puppet-install
+    /usr/local/bin/pdk build --force
+  become: true
+
+# Instrument infra recipe via module
+- name: Installing newrelic_installer module
+  include_tasks: install-module/linux.yml
+  vars:
+    nr_api_key: "{{ newrelic_personal_api_key }}"
+    nr_account_id: "{{ newrelic_account_id }}"
+    nr_region: "{{ newrelic_region|upper }}"
