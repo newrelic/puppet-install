@@ -1,0 +1,75 @@
+{
+    "global_tags": {
+        "owning_team": "virtuoso",
+        "Environment": "development",
+        "Department": "product",
+        "Product": "virtuoso"
+    },
+
+    "resources": [{
+        "id": "ubuntuapachenetcore1",
+        "provider": "aws",
+        "type": "ec2",
+        "size": "t3.micro",
+        "ami_name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-????????",
+        "user_name": "ubuntu"
+    }],
+
+    "services": [{
+        "id": "aspnetcore",
+        "destinations": ["ubuntuapachenetcore1"],
+        "source_repository": "https://github.com/newrelic/open-install-library.git",
+        "deploy_script_path": "test/deploy/linux/dotNet/install/ubuntu20/roles",
+        "port": 9999
+      },
+      { 
+        "id": "apache1",
+        "destinations": ["ubuntuapachenetcore1"],
+        "source_repository": "https://github.com/newrelic/open-install-library.git",
+        "deploy_script_path": "test/deploy/linux/apache/install/debian/roles",
+        "port": 80
+      },
+      {
+        "id": "dotnet1",
+        "destinations": ["ubuntuapachenetcore1"],
+        "source_repository": "https://github.com/newrelic/open-install-library.git",
+        "deploy_script_path": "test/deploy/linux/apache/deploy-application/dotNet/debian/roles",
+        "port": 8080,
+        "params": {
+            "is_selfcontained": "true"
+        }
+      },
+      {
+        "id": "dotnet2",
+        "destinations": ["ubuntuapachenetcore1"],
+        "source_repository": "https://github.com/newrelic/open-install-library.git",
+        "deploy_script_path": "test/deploy/linux/apache/deploy-application/dotNet/debian/roles",
+        "port": 8081
+      }],
+
+      "instrumentations": {
+        "resources": [
+          {
+            "id": "ubunut_20_puppet-install_dotnet",
+            "resource_ids": [
+              "ubuntuapachenetcore1"
+            ],
+            "provider": "newrelic",
+            "local_source_path": "/mnt/deployer/puppet-install",
+            "deploy_script_path": "/test/demo-deployer/setup/dotnet/roles"
+          },
+          {
+            "id": "recipeValidation",
+            "resource_ids": [
+              "ubuntuapachenetcore1"
+            ],
+            "provider": "newrelic",
+            "local_source_path": "/mnt/deployer/puppet-install",
+            "deploy_script_path": "/test/demo-deployer/validate/roles",
+            "params": {
+              "nrql_query": "select count(*) from ApplicationAgentContext where agent.language = 'dotnet' and host like '%HOSTNAME%' since 8 minutes ago"
+            }
+          }
+        ]
+      }
+}
