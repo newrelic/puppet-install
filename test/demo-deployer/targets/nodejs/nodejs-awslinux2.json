@@ -1,0 +1,64 @@
+{
+    "global_tags": {
+      "owning_team": "virtuoso",
+      "Environment": "development",
+      "Department": "product",
+      "Product": "virtuoso"
+    },
+  
+    "resources": [
+      {
+        "id": "nodelinux2",
+        "provider": "aws",
+        "type": "ec2",
+        "size": "t3.micro",
+        "ami_name": "newrelic-install-linux-node-pm2"
+      }
+    ],
+  
+    "services": [
+      {
+        "id": "nodetron",
+        "source_repository": "https://github.com/newrelic/demo-nodetron.git",
+        "deploy_script_path": "deploy/linux/pm2/roles",
+        "port": 5001,
+        "destinations": ["nodelinux2"],
+        "files": [
+            {
+              "destination_filepath": "engine/cronjob.json",
+              "content": [
+                {
+                  "frequency": "* * * * *",
+                  "job": "for ((i=1;i<=30;i++)); do curl '[service:nodetron:url]/'; curl '[service:nodetron:url]/api/inventory'; sleep 1; done"
+                }
+              ]
+            }
+          ]
+      }
+    ],
+    "instrumentations": {
+      "resources": [
+        {
+          "id": "amzn2_puppet-install_nodejs",
+          "resource_ids": [
+            "nodelinux2"
+          ],
+          "provider": "newrelic",
+          "local_source_path": "/mnt/deployer/puppet-install",
+          "deploy_script_path": "/test/demo-deployer/setup/nodejs/roles"
+        },
+        {
+          "id": "recipeValidation",
+          "resource_ids": [
+            "nodelinux2"
+          ],
+          "provider": "newrelic",
+          "local_source_path": "/mnt/deployer/puppet-install",
+          "deploy_script_path": "/test/demo-deployer/setup/nodejs/roles",
+          "params": {
+            "nrql_query": "select count(*) from ApplicationAgentContext where agent.language = 'nodejs' and host like '%HOSTNAME%' since 8 minutes ago"
+          }
+        }
+      ]
+    }
+  }
