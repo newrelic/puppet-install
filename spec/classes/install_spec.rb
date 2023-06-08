@@ -12,47 +12,29 @@ def required_vars
 end
 
 describe 'newrelic_installer::install' do
+  targets = ['infrastructure', 'php', 'nodejs']
   on_supported_os.each do |os, os_facts|
-    context "installed target=infrastructure and running newrelic-infra on #{os}" do
-      let(:facts) { os_facts }
-      let(:params) do
-        required_vars.merge({ 'targets' => ['infrastructure'] })
+    targets.each do |target|
+      context "installed target=#{target} and running newrelic-infra on #{os}" do
+        let(:facts) { os_facts }
+        let(:params) do
+          required_vars.merge({ 'targets' => [target] })
+        end
+
+        # kernel-specific asserts
+        if os_facts[:kernel] == 'Linux'
+          it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
+          it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic install(.*)--tag nr_deployed_by:puppet-install}) }
+        elsif os_facts[:kernel] == 'windows'
+          it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
+          it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic.exe" install(.*)--tag nr_deployed_by:puppet-install}) }
+        end
+
+        # common asserts
+        it { is_expected.to have_exec_resource_count(2) }
+        it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
+        it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
       end
-
-      # kernel-specific asserts
-      if os_facts[:kernel] == 'Linux'
-        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
-        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic install(.*)--tag nr_deployed_by:puppet-install}) }
-      elsif os_facts[:kernel] == 'windows'
-        it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
-        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic.exe" install(.*)--tag nr_deployed_by:puppet-install}) }
-      end
-
-      # common asserts
-      it { is_expected.to have_exec_resource_count(2) }
-      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
-      it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
-    end
-
-    context "installed target=php and on #{os}" do
-      let(:facts) { os_facts }
-      let(:params) do
-        required_vars.merge({ 'targets' => ['php'] })
-      end
-
-      # kernel-specific asserts
-      if os_facts[:kernel] == 'Linux'
-        it { is_expected.to contain_remote_file('/tmp/newrelic_cli_install.sh').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.sh', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
-        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic install(.*)--tag nr_deployed_by:puppet-install}) }
-      elsif os_facts[:kernel] == 'windows'
-        it { is_expected.to contain_remote_file('C:\Windows\TEMP\install.ps1').with('source' => 'https://download.newrelic.com/install/newrelic-cli/scripts/install.ps1', 'ensure' => 'present', 'mode' => '511').that_comes_before('Exec[install newrelic-cli]') }
-        it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)newrelic.exe" install(.*)--tag nr_deployed_by:puppet-install}) }
-      end
-
-      # common asserts
-      it { is_expected.to have_exec_resource_count(2) }
-      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=US(.*)NEW_RELIC_CLI_SKIP_CORE=1(.*)}) }
-      it { is_expected.to contain_exec('install newrelic-cli').that_comes_before('Exec[install newrelic instrumentation]') }
     end
   end
   on_supported_os.each do |os, os_facts|

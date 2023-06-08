@@ -16,7 +16,8 @@ Puppet::Functions.create_function(:"newrelic_installer::targets_to_recipes") do
     valid_recipe_mappings = {
       'infrastructure' => 'infrastructure-agent-installer',
       'logs' => 'logs-integration',
-      'php' => 'php-agent-installer'
+      'php' => 'php-agent-installer',
+      'nodejs' => 'node-agent-installer'
     }
     requires_infrastructure_set = Set['logs']
 
