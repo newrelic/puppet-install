@@ -40,7 +40,7 @@ To use this module, you'll need to instantiate the `::install` class, specifying
 ```ruby
 # /etc/puppetlabs/code/environments/<YOUR_ENVIRONMENT>/manifests/site.pp
 class { 'newrelic_installer::install':
-          targets               => ["infrastructure", "logs", "php"],
+          targets               => ["infrastructure", "logs", "php", "dotnet"],
           environment_variables => {
             "NEW_RELIC_API_KEY"          => "<YOUR-NR-API-KEY>",
             "NEW_RELIC_ACCOUNT_ID"       => <YOUR-NR-ACCOUNT-ID>,
@@ -56,6 +56,7 @@ Supported values include:
 * `'infrastructure'` - New Relic Infrastructure Agent
 * `'logs'` - Logs integration for New Relic Infrastructure Agent. **requires `'infrastructure'`*
 * `'php'` - New Relic PHP APM Agent
+* `'dotnet'` - New Relic .Net APM Agent
 #### `environment_variables` _Hash_ 
 Hash of environment variables to set prior to execution.
 * `NEW_RELIC_API_KEY`: your New Relic API key **required*
