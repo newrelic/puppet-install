@@ -23,7 +23,7 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install.git",
+        "source_repository": "-b chore/fix-test https://github.com/newrelic/puppet-install.git",
         "deploy_script_path": "test/demo-deployer/setup/nodejs/roles"
       },
       {
@@ -32,7 +32,7 @@
           "host1"
         ],
         "provider": "newrelic",
-        "source_repository": "https://github.com/newrelic/puppet-install.git",
+        "source_repository": "-b chore/fix-test https://github.com/newrelic/puppet-install.git",
         "deploy_script_path": "test/demo-deployer/validate/roles",
         "params": {
           "nrql_query": "SELECT count(*) FROM NrIntegrationError WHERE purpose = 'New Relic CLI configuration validation' AND hostname like '%HOSTNAME%' since 5 minutes ago"

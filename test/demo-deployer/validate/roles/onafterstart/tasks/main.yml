@@ -66,7 +66,6 @@
     - name: Dumping gql query json
       shell: |
         cat {{ playbook_dir }}/gql-query.json
-      become: true
 
     - name: Run NRQL via nerdgraph
       shell: "curl -sX POST '{{ newrelic_api_url_to_use }}/graphql' \
