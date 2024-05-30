@@ -151,4 +151,14 @@ describe 'newrelic_installer::install' do
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--tag nr_deployed_by:puppet-install,some-tag:some-value,another-tag:another-value(.*)}) }
     end
   end
+  on_supported_os.each do |os, os_facts|
+    context "installed with trace verbosity on #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        required_vars.merge({ 'targets' => ['super-agent'], 'verbosity' => 'trace', 'proxy' => '' })
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--trace(.*)}) }
+    end
+  end
 end
