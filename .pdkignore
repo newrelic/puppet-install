@@ -39,6 +39,7 @@
 /rakelib/
 /.rspec
 /.rubocop.yml
+/.travis.yml
 /.yardopts
 /spec/
 /.vscode/

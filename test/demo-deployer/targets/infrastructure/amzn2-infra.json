@@ -19,18 +19,14 @@
     "resources": [
       {
         "id": "amzn2_puppet-install_infra",
-        "resource_ids": [
-          "host1"
-        ],
+        "resource_ids": ["host1"],
         "provider": "newrelic",
         "local_source_path": "/mnt/deployer/puppet-install",
         "deploy_script_path": "/test/demo-deployer/setup/infrastructure/roles"
       },
       {
         "id": "recipeValidation",
-        "resource_ids": [
-          "host1"
-        ],
+        "resource_ids": ["host1"],
         "provider": "newrelic",
         "local_source_path": "/mnt/deployer/puppet-install",
         "deploy_script_path": "/test/demo-deployer/validate/roles",
