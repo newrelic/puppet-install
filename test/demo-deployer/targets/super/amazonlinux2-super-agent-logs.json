@@ -5,16 +5,17 @@
     "Department": "product",
     "Product": "virtuoso"
   },
+
   "resources": [
     {
       "id": "host1",
       "provider": "aws",
-      "type": "ec2",
-      "size": "t3.small",
       "ami_name": "amzn2-ami-hvm-2.0.????????.?-x86_64-gp2",
-      "user_name": "ec2-user"
+      "type": "ec2",
+      "size": "t3.micro"
     }
   ],
+
   "instrumentations": {
     "resources": [
       {
@@ -22,7 +23,7 @@
         "resource_ids": ["host1"],
         "provider": "newrelic",
         "local_source_path": "/mnt/deployer/puppet-install",
-        "deploy_script_path": "/test/demo-deployer/setup/infrastructure/roles"
+        "deploy_script_path": "/test/demo-deployer/setup/super/roles"
       },
       {
         "id": "recipeValidation",
@@ -31,7 +32,7 @@
         "local_source_path": "/mnt/deployer/puppet-install",
         "deploy_script_path": "/test/demo-deployer/validate/roles",
         "params": {
-          "nrql_query": "select count(*) from ProcessSample where hostname like '%HOSTNAME%' since 8 minutes ago"
+          "nrql_query": "select count(*) from SystemSample where hostname like '%HOSTNAME%' since 10 minutes ago"
         }
       }
     ]

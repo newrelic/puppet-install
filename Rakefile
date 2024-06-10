@@ -127,9 +127,7 @@ def release_verify_branch
                         `"YbbdP"'   "Y888 `"YbbdP"'  88`YbbdP"'   
                                                      88           
                                                      88    
-
 You are attempting to release a version from  "#{branch}" - you must be on "main" to initiate the release process!
-
 EOM
 
   else
