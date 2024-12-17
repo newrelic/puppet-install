@@ -19,8 +19,8 @@ Puppet::Functions.create_function(:"newrelic_installer::targets_to_recipes") do
       'php' => 'php-agent-installer',
       'dotnet' => 'dotnet-agent-installer',
       'nodejs' => 'node-agent-installer',
-      'super-agent' => 'super-agent',
-      'logs-super-agent' => 'logs-integration-super-agent'
+      'agent-control' => 'agent-control',
+      'logs-agent-control' => 'logs-integration-agent-control'
     }
     requires_infrastructure_set = Set['logs']
 

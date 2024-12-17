@@ -5,8 +5,8 @@ require 'spec_helper'
 describe 'newrelic_installer::targets_to_recipes' do
   # single valid recipe - infrastructure
   it { is_expected.to run.with_params(['infrastructure']).and_return('infrastructure-agent-installer') }
-  it { is_expected.to run.with_params(['super-agent']).and_return('super-agent') }
-  it { is_expected.to run.with_params(['logs-super-agent']).and_return('logs-integration-super-agent') }
+  it { is_expected.to run.with_params(['agent-control']).and_return('agent-control') }
+  it { is_expected.to run.with_params(['logs-agent-control']).and_return('logs-integration-agent-control') }
   it { is_expected.to run.with_params(['php']).and_return('php-agent-installer') }
   it { is_expected.to run.with_params(['dotnet']).and_return('dotnet-agent-installer') }
   it { is_expected.to run.with_params(['nodejs']).and_return('node-agent-installer') }
