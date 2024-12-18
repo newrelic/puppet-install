@@ -6,6 +6,7 @@ runs:
     - name: Update PDK Templates
       id: update_templates
       run: pdk update
+      shell: bash
     - name: Validate
       id: validate
       run: pdk validate --format=text --parallel
