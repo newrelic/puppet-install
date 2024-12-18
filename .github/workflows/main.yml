@@ -15,4 +15,4 @@ jobs:
       - name: Prepare environment
         uses: newrelic/puppet-install/.github/actions/installation@main
       - name: Run tests
-        uses: newrelic/puppet-install/.github/actions/tests@fix-tests
+        uses: newrelic/puppet-install/.github/actions/tests@main
