@@ -155,7 +155,7 @@ describe 'newrelic_installer::install' do
     context "installed with trace verbosity on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        required_vars.merge({ 'targets' => ['super-agent'], 'verbosity' => 'trace', 'proxy' => '' })
+        required_vars.merge({ 'targets' => ['agent-control'], 'verbosity' => 'trace', 'proxy' => '' })
       end
 
       it { is_expected.to contain_exec('install newrelic instrumentation').with('command' => %r{(.*)--trace(.*)}) }
