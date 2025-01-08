@@ -1,5 +1,5 @@
 class { 'newrelic_installer::install':
-  targets               => ["super-agent"],
+  targets               => ["agent-control"],
   environment_variables => {
     "NEW_RELIC_API_KEY"    => "{{ nr_api_key }}",
     "NEW_RELIC_ACCOUNT_ID" => {{ nr_account_id }},
