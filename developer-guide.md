@@ -67,7 +67,7 @@ class { 'newrelic_installer::install':
     environment_variables => {
         'NEW_RELIC_API_KEY'    => '<YOUR-NR-API-KEY>',
         'NEW_RELIC_ACCOUNT_ID' => <YOUR-NR-ACCOUNT-ID>,
-        'NEW_RELIC_REGION'     => 'US', # or 'EU' based on your account
+        'NEW_RELIC_REGION'     => 'US', # or 'EU' or 'JP' based on your account
     },
 }
 ```

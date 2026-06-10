@@ -51,7 +51,7 @@ class newrelic_installer::install (
   # Default region to US
   if $environment_variables['NEW_RELIC_REGION'] == undef
   or $environment_variables['NEW_RELIC_REGION'].length() == 0
-  or !(upcase($environment_variables['NEW_RELIC_REGION']) in ['US', 'EU', 'STAGING']) {
+  or !(upcase($environment_variables['NEW_RELIC_REGION']) in ['US', 'EU', 'JP', 'STAGING']) {
     $nr_region = { 'NEW_RELIC_REGION' => 'US' }
   } else {
     $nr_region = { 'NEW_RELIC_REGION' => "${upcase($environment_variables['NEW_RELIC_REGION'])}" }
