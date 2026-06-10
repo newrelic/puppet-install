@@ -5,10 +5,15 @@ on:
 
 name: Release
 
+permissions:
+  contents: read
+
 jobs:
   run_prerelease_tasks:
     runs-on: ubuntu-latest
     name: Run tests
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
