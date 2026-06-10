@@ -44,7 +44,7 @@ class { 'newrelic_installer::install':
           environment_variables => {
             "NEW_RELIC_API_KEY"          => "<YOUR-NR-API-KEY>",
             "NEW_RELIC_ACCOUNT_ID"       => <YOUR-NR-ACCOUNT-ID>,
-            "NEW_RELIC_REGION"           => "<US|EU>",
+            "NEW_RELIC_REGION"           => "<US|EU|JP>",
             "NEW_RELIC_APPLICATION_NAME" => "<YOUR-PHP-APPLICATION-NAME>"
           }
 }
@@ -62,7 +62,7 @@ Supported values include:
 Hash of environment variables to set prior to execution.
 * `NEW_RELIC_API_KEY`: your New Relic API key **required*
 * `NEW_RELIC_ACCOUNT_ID`: your New Relic account id **required*
-* `NEW_RELIC_REGION`: your New Relic account's region (`US` or `EU`).  Defaults to `US` if not specified
+* `NEW_RELIC_REGION`: your New Relic account's region (`US`, `EU`, or `JP`).  Defaults to `US` if not specified
 * `NEW_RELIC_APPLICATION_NAME`: used by `'php'`. This config option sets the application name that data is reported under in APM. Defaults to `'PHP Application'` if not specified.
 #### `verbosity` _String_ (optional)
 Specifies command output verbosity

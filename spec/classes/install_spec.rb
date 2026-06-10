@@ -105,6 +105,23 @@ describe 'newrelic_installer::install' do
     end
   end
   on_supported_os.each do |os, os_facts|
+    context "installs using JP as region #{os}" do
+      let(:facts) { os_facts }
+      let(:params) do
+        {
+          'targets' => ['infrastructure'],
+          'environment_variables' => {
+            'NEW_RELIC_API_KEY' => 'some-api-key',
+            'NEW_RELIC_ACCOUNT_ID' => 123,
+            'NEW_RELIC_REGION' => 'jp'
+          },
+        }
+      end
+
+      it { is_expected.to contain_exec('install newrelic instrumentation').with('environment' => %r{(.*)NEW_RELIC_REGION=JP(.*)}) }
+    end
+  end
+  on_supported_os.each do |os, os_facts|
     context "installs explicity pass US as region #{os}" do
       let(:facts) { os_facts }
       let(:params) do
