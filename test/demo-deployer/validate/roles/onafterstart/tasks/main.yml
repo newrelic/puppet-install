@@ -29,6 +29,11 @@
     newrelic_api_url_to_use: "api.eu.newrelic.com"
   when: newrelic_api_url is undefined and (newrelic_region|lower) == 'eu'
 
+- name: Configure nerdgraph calls to use JP url
+  set_fact:
+    newrelic_api_url_to_use: "api.jp.newrelic.com"
+  when: newrelic_api_url is undefined and (newrelic_region|lower) == 'jp'
+
 - name: Configure nerdgraph calls to use Staging url
   set_fact:
     newrelic_api_url_to_use: "staging-api.newrelic.com"
