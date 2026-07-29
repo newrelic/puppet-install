@@ -97,14 +97,17 @@ class newrelic_installer::install (
         proxy  => $proxy,
       }
       -> exec { 'install newrelic-cli':
-        command     => strip('/tmp/newrelic_cli_install.sh'),
+        creates     => '/usr/local/bin/newrelic',
+        command     => '/tmp/newrelic_cli_install.sh',
+        path        => ['/usr/local/sbin', '/usr/sbin', '/sbin', '/usr/bin', '/bin', '/usr/local/bin'],
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
       -> exec { 'install newrelic instrumentation':
-        command     => strip("/usr/local/bin/newrelic install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}")
-        ,
+        unless      => '/usr/bin/test -f /etc/newrelic-infra.yml',
+        command     => strip("/usr/local/bin/newrelic install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
+        path        => ['/usr/local/sbin', '/usr/sbin', '/sbin', '/usr/bin', '/bin', '/usr/local/bin'],
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
@@ -118,13 +121,15 @@ class newrelic_installer::install (
         proxy  => $proxy,
       }
       -> exec { 'install newrelic-cli':
-        command     => strip('powershell -ExecutionPolicy Bypass -File C:\Windows\TEMP\install.ps1'),
+        creates     => 'C:\Program Files\New Relic\New Relic CLI\newrelic.exe',
+        command     => 'powershell -ExecutionPolicy Bypass -File C:\Windows\TEMP\install.ps1',
         provider    => powershell,
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
         logoutput   => true,
       }
       -> exec { 'install newrelic instrumentation':
+        unless      => 'powershell -Command "if (Test-Path \"C:\Program Files\New Relic\New Relic Infrastructure\newrelic-infra.yml\") { exit 0 } else { exit 1 }"',
         command     => strip("\"C:\\Program Files\\New Relic\\New Relic CLI\\newrelic.exe\" install ${cli_recipe_arg} -y ${cli_tag_arg} ${cli_verbosity_arg}"),
         environment => $cli_envars,
         timeout     => $install_timeout_seconds,
