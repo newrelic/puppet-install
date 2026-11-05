@@ -78,6 +78,20 @@ Sets the proxy server the agent should use. Examples:
 * `http://10.10.254.254`
 #### `install_timeout_seconds` _Integer_ (optional)
 Sets the timeout in seconds for New Relic installations.  Default is 600
+#### `creates` _String_ (optional)
+Path that exists once the targets are installed, usually the infrastructure agent binary. While it exists, neither the New Relic CLI nor the instrumentation is installed again. Without it, every Puppet run reinstalls the latest version of the targets and restarts them. Examples:
+* `/usr/bin/newrelic-infra`
+* `C:\Program Files\New Relic\newrelic-infra\newrelic-infra.exe`
+
+Cannot be used with `agent_version`.
+#### `agent_version` _String_ (optional)
+Version of the infrastructure agent to install, e.g. `'2.0.1'`. Requires the `'infrastructure'` target. On each Puppet run, the version reported by `newrelic-infra -version` is compared with it:
+* same version: nothing runs, the agent is neither reinstalled nor restarted;
+* other version, or no agent: the CLI installs this exact version (`INFRASTRUCTURE_AGENT_INSTALLER_VERSION`), which restarts the agent once.
+
+To upgrade, change the version (e.g. in Hiera, at the level of the whole fleet, overridden by project or node where needed).
+
+With `creates` or `agent_version`, the installation is skipped as a whole while the check succeeds: a target added later, or a change to `tags`, `proxy` or `environment_variables`, is not applied until the agent version changes.
 
 ## Support
 New Relic hosts and moderates an online forum where customers can interact with
